@@ -19,8 +19,10 @@ public class BinarySearchTreeRecursive implements IBinarySearchTree {
             node = new BinarySearchTreeNode(value);
         else if(value > node.data)
             node.right = addUtil(node.right, value);
-        else
+        else if(value < node.data)
             node.left = addUtil(node.left, value);
+        else
+            ; // Duplicate; do nothing
         return node;
     }
 
@@ -52,7 +54,7 @@ public class BinarySearchTreeRecursive implements IBinarySearchTree {
 
     private BinarySearchTreeNode removeUtil(BinarySearchTreeNode node, int target) {
         if(node == null)
-            return node;
+            return null;
 
         if(target > node.data)
             node.right = removeUtil(node.right, target);
@@ -69,11 +71,20 @@ public class BinarySearchTreeRecursive implements IBinarySearchTree {
 
     private BinarySearchTreeNode findMax(BinarySearchTreeNode node) {
         if(node == null)
-            return null;
+            return node;
         else if(node.right == null)
             return node;
         else
             return findMax(node.right);
+    }
+
+    private BinarySearchTreeNode findMin(BinarySearchTreeNode node) {
+        if(node == null)
+            return null;
+        else if(node.right == null)
+            return node;
+        else
+            return findMin(node.right);
     }
 
     @Override
