@@ -1,7 +1,6 @@
 package com.maniavision.adts;
 
 public interface IBinarySearchTree {
-
     void add(int value);
     boolean search(int key);
     void remove(int value);

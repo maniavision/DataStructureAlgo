@@ -44,7 +44,36 @@ public class BinarySearchTreeRecursive implements IBinarySearchTree {
 
     @Override
     public void remove(int value) {
+        boolean isPresent = search(value);
+        if(isPresent) {
+            root = removeUtil(root, value);
+        }
+    }
 
+    private BinarySearchTreeNode removeUtil(BinarySearchTreeNode node, int target) {
+        if(node == null)
+            return node;
+
+        if(target > node.data)
+            node.right = removeUtil(node.right, target);
+        else if(target < node.data)
+            node.left = removeUtil(node.left, target);
+        else if(node.left != null && node.right != null) {
+            node.data = findMax(node.left).data;
+            node.left = removeUtil(node.left, node.data);
+        } else
+            node = (node.left != null) ? node.left: node.right;
+
+        return node;
+    }
+
+    private BinarySearchTreeNode findMax(BinarySearchTreeNode node) {
+        if(node == null)
+            return null;
+        else if(node.right == null)
+            return node;
+        else
+            return findMax(node.right);
     }
 
     @Override
@@ -54,7 +83,13 @@ public class BinarySearchTreeRecursive implements IBinarySearchTree {
 
     @Override
     public int size() {
-        return 0;
+        return sizeUtil(root);
+    }
+
+    private int sizeUtil(BinarySearchTreeNode node) {
+        if(node == null)
+            return 0;
+        return 1 + sizeUtil(node.left) + sizeUtil(node.right);
     }
 
     @Override
