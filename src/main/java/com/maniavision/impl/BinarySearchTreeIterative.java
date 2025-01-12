@@ -70,19 +70,14 @@ public class BinarySearchTreeIterative implements IBinarySearchTree {
                     parent = curr;
                     curr = curr.left;
                 } else
-                    break;
+                    break; // found
             }
 
             if(curr == root) // root node
                 curr = null;
 
-            if(curr.left == null && curr.right == null) { // leaf node
+            if(curr.left == null || curr.right == null) { // leaf or node with one child
                 if(curr == parent.right)
-                    parent.right = null;
-                else
-                    parent.left = null;
-            } else if(curr.left == null || curr.right == null) { // node with one child
-                if(value > parent.data)
                     parent.right = (curr.right == null) ? curr.left: curr.right;
                 else
                     parent.left = (curr.right == null) ? curr.left: curr.right;

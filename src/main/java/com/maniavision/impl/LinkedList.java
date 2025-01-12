@@ -127,4 +127,12 @@ public class LinkedList implements IList {
             System.out.println();
         }
     }
+
+    public LinkedListNode getHead() {
+        return head;
+    }
+
+    public LinkedListNode getTail() {
+        return tail;
+    }
 }
