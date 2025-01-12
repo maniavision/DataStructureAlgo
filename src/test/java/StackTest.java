@@ -1,6 +1,6 @@
 import com.maniavision.adts.IStack;
-import com.maniavision.impl.ArrayListStack;
-import com.maniavision.impl.LinkedListStack;
+import com.maniavision.impl.StackArrayList;
+import com.maniavision.impl.StackLinkedList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,12 +9,12 @@ import java.util.EmptyStackException;
 public class StackTest {
     @Test
     public void test_linked_list_stack() {
-        testingStack(new LinkedListStack());
+        testingStack(new StackLinkedList());
     }
 
     @Test
     public void test_array_list_stack() {
-        testingStack(new ArrayListStack());
+        testingStack(new StackArrayList());
     }
 
     public void testingStack(IStack stack) {

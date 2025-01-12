@@ -4,31 +4,30 @@ import com.maniavision.adts.IStack;
 
 import java.util.EmptyStackException;
 
-public class LinkedListStack implements IStack {
-    private LinkedList list;
-
-    public LinkedListStack() {
-        list = new LinkedList();
+public class StackArrayList implements IStack {
+    private ArrayList list;
+    public StackArrayList() {
+        list = new ArrayList();
     }
     @Override
     public void push(int value) {
-        list.addFront(value);
+        list.add(value);
     }
 
     @Override
     public int pop() throws EmptyStackException {
-        if(isEmpty())
+        if(list.isEmpty())
             throw new EmptyStackException();
-        int top = list.getHead().data;
+        int top = list.get(list.size() - 1);
         list.remove(top);
         return top;
     }
 
     @Override
     public int top() {
-        if(isEmpty())
+        if(list.isEmpty())
             throw new EmptyStackException();
-        return list.getHead().data;
+        return list.get(list.size() - 1);
     }
 
     @Override
