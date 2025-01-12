@@ -73,7 +73,7 @@ public class BinarySearchTreeIterative implements IBinarySearchTree {
                     break;
             }
 
-            if(parent == null) // root node
+            if(curr == root) // root node
                 curr = null;
 
             if(curr.left == null && curr.right == null) { // leaf node
@@ -101,25 +101,6 @@ public class BinarySearchTreeIterative implements IBinarySearchTree {
                     p.right = predecessor.left; // predecessor can only have left child
             }
         }
-
-    }
-
-    private void remove(BinarySearchTreeNode nodeToRemove) {
-        BinarySearchTreeNode parent = nodeToRemove;
-        BinarySearchTreeNode predecessor = nodeToRemove.left;
-        while(predecessor.right != null) {
-            parent = predecessor;
-            predecessor = predecessor.right;
-        }
-
-        if(parent == nodeToRemove)
-            parent.left = predecessor;
-        else
-            parent.right = predecessor.left;
-//        else
-//            nodeToRemove.left = predecessor.right;
-
-        nodeToRemove.data = predecessor.data;
     }
 
     private BinarySearchTreeNode parentOfPredecessor(BinarySearchTreeNode node) {
