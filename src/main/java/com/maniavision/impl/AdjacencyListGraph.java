@@ -16,7 +16,7 @@ public class AdjacencyListGraph implements IGraph {
     }
 
     @Override
-    public void addEdge(int fromVertex, int toVertex) {
+    public void addEdge(int fromVertex, int toVertex, int cost) {
 
     }
 
@@ -31,12 +31,12 @@ public class AdjacencyListGraph implements IGraph {
     }
 
     @Override
-    public void depthFirstSearch() {
-
+    public boolean depthFirstSearch(int source, int target) {
+        return false;
     }
 
     @Override
-    public void breathFirstSearch() {
-
+    public boolean breathFirstSearch(int source, int target) {
+        return false;
     }
 }
