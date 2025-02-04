@@ -8,6 +8,8 @@ public interface IGraph {
     void addEdge(int fromVertex, int toVertex, int cost);
     List<Integer> getVertices(int vertex);
     boolean isEmpty();
+    void depthFirstSearch(int source);
     boolean depthFirstSearch(int source, int target);
+    void breathFirstSearch(int source);
     boolean breathFirstSearch(int source, int target);
 }

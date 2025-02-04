@@ -1,12 +1,10 @@
 package com.maniavision;
 
-import com.maniavision.adts.IBinarySearchTree;
-import com.maniavision.adts.IList;
-import com.maniavision.impl.BinarySearchTreeRecursive;
+import com.maniavision.adts.IGraph;
+import com.maniavision.impl.AdjacencyListGraph;
 import com.maniavision.problems.ListProblems;
 import com.maniavision.problems.StringProblems;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,7 +12,26 @@ import java.util.List;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
+        IGraph g = new AdjacencyListGraph(false);
+        g.addVertex(0);
+        g.addVertex(1);
+        g.addVertex(2);
+        g.addVertex(3);
+        g.addVertex(4);
 
+        g.addEdge(0, 1, 1);
+        g.addEdge(0, 2, 1);
+        g.addEdge(1, 2, 1);
+        g.addEdge(1, 3, 1);
+        g.addEdge(2, 4, 1);
+        g.addEdge(3, 4, 1);
+
+//        g.depthFirstSearch(0, 2);
+        g.breathFirstSearch(0, 3);
+
+    }
+
+    public static void problems() {
         System.out.println(StringProblems.OrderMatching("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "JOST"));
         System.out.println(StringProblems.UniqueCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
         System.out.println(StringProblems.toUpper("abcd"));

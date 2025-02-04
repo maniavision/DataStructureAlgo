@@ -2,6 +2,7 @@ package com.maniavision.impl;
 
 import com.maniavision.adts.IGraph;
 
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -19,9 +20,9 @@ public class AdjacencyMatrixDirectedGraph implements IGraph {
         edges = new int[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
     }
 
-    public AdjacencyMatrixDirectedGraph(int numbVertices) {
+    public AdjacencyMatrixDirectedGraph(int capacity) {
         numbVertices = 0;
-        maxVertices = numbVertices;
+        maxVertices = capacity;
         vertices = new int[maxVertices];
         edges = new int[maxVertices][maxVertices];
     }
@@ -88,8 +89,8 @@ public class AdjacencyMatrixDirectedGraph implements IGraph {
         visited[index] = true;
         for(int i = 0; i < edges[index].length; i++) {
             if(edges[index][i] == 1 && !visited[i]) {
-                dfsUtil(i, visited);
                 System.out.println("(" + index + "," + i + ")");
+                dfsUtil(i, visited);
             }
         }
     }
@@ -115,6 +116,20 @@ public class AdjacencyMatrixDirectedGraph implements IGraph {
 
     @Override
     public boolean breathFirstSearch(int source, int target) {
-        return false;
+        boolean visited[] = new boolean[numbVertices];
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        queue.add(source);
+        while(!queue.isEmpty()) {
+            int v = queue.pop();
+            visited[v] = true;
+
+            for(int i = 0; i < edges[v].length; i++) {
+                if(edges[v][i] == 1 && !visited[i]){
+                    System.out.println("(" + v + "," + i +")");
+                    queue.add(i);
+                }
+            }
+        }
+        return visited[target];
     }
 }
