@@ -3,28 +3,31 @@ package com.maniavision.impl;
 import com.maniavision.adts.IGraph;
 
 import java.util.ArrayDeque;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class AdjacencyMatrixDirectedGraph implements IGraph {
+public class AdjacencyMatrixGraph implements IGraph {
     private static int DEFAULT_CAPACITY = 10;
     private int numbVertices;
     private int maxVertices;
     private int vertices[];
     private int edges[][];
+    private boolean isDirected;
 
-    public AdjacencyMatrixDirectedGraph() {
-        numbVertices = 0;
-        vertices = new int[DEFAULT_CAPACITY];
-        edges = new int[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
+    public AdjacencyMatrixGraph(boolean isDirected) {
+        this.isDirected = isDirected;
+        this.numbVertices = 0;
+        this.vertices = new int[DEFAULT_CAPACITY];
+        this.edges = new int[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
     }
 
-    public AdjacencyMatrixDirectedGraph(int capacity) {
-        numbVertices = 0;
-        maxVertices = capacity;
-        vertices = new int[maxVertices];
-        edges = new int[maxVertices][maxVertices];
+    public AdjacencyMatrixGraph(boolean isDirected, int capacity) {
+        this.isDirected = isDirected;
+        this.numbVertices = 0;
+        this.maxVertices = capacity;
+        this.vertices = new int[maxVertices];
+        this.edges = new int[maxVertices][maxVertices];
     }
 
     @Override
@@ -51,38 +54,82 @@ public class AdjacencyMatrixDirectedGraph implements IGraph {
         return found;
     }
 
+    private int indexOf(int vertex) {
+        int index = 0;
+        while(index < vertices.length) {
+            if(vertices[index] == vertex)
+                return index;
+            else
+                index++;
+        }
+        return -1;
+    }
+
     @Override
     public void addEdge(int fromVertex, int toVertex, int cost) {
-        edges[fromVertex][toVertex] = cost;
+        int row = indexOf(fromVertex);
+        int col = indexOf(toVertex);
+        edges[row][col] = cost;
+        if(!isDirected)
+            edges[col][row] = cost;
     }
 
     @Override
     public List<Integer> getVertices(int vertex) {
-        return null;
-    }
+        List<Integer> adjacentIndexes = new ArrayList<>();
+        int index = indexOf(vertex);
+        for(int r = 0; r < edges.length; r++) {
+            for(int c = 0; c < edges[0].length; c++) {
+                if(r == index && edges[r][c] != 0) {
+                    adjacentIndexes.add(c);
+                }
+            }
+        }
 
-//    @Override
-//    public List<Integer> getVertices(int vertex) {
-//        List<Integer> output = new LinkedList<>();
-//
-//        for(int r = 0; r < numbVertices; r++) {
-//            for(int c = 0; c < numbVertices; c++) {
-//                if()
-//            }
-//        }
-//        return null;
-//    }
+        List<Integer> result = new ArrayList<>();
+        for(Integer idx: adjacentIndexes) {
+            result.add(vertices[idx]);
+        }
+        return result;
+    }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return vertices.length == 0;
+    }
+
+    @Override
+    public void depthFirstSearch(int source) {
+        boolean visited[] = new boolean[numbVertices];
+        dfsUtil(source, visited);
     }
 
     @Override
     public boolean depthFirstSearch(int source, int target) {
         boolean visited[] = new boolean[numbVertices];
-        dfsUtil(source, visited);
+        int index = indexOf(source);
+        dfsUtil(index, visited);
         return visited[target];
+    }
+
+    @Override
+    public void breathFirstSearch(int source) {
+        boolean visited[] = new boolean[numbVertices];
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        int index = indexOf(source);
+        visited[index] = true;
+        queue.add(index);
+        while(!queue.isEmpty()) {
+            int v = queue.pop();
+
+            for(int i = 0; i < edges[v].length; i++) {
+                if(edges[v][i] == 1 && !visited[i]){
+                    System.out.println("(" + v + "," + i +")");
+                    visited[i] = true;
+                    queue.add(i);
+                }
+            }
+        }
     }
 
     private void dfsUtil(int index, boolean[] visited) {
@@ -98,7 +145,8 @@ public class AdjacencyMatrixDirectedGraph implements IGraph {
     public boolean depthFirstSearchV1(int source, int target) {
         boolean visited[] = new boolean[numbVertices];
         Stack<Integer> stk = new Stack<>();
-        stk.push(source);
+        int index = indexOf(source);
+        stk.push(index);
 
         while(!stk.empty()) {
             int v = stk.pop();
@@ -118,6 +166,8 @@ public class AdjacencyMatrixDirectedGraph implements IGraph {
     public boolean breathFirstSearch(int source, int target) {
         boolean visited[] = new boolean[numbVertices];
         ArrayDeque<Integer> queue = new ArrayDeque<>();
+        int index = indexOf(source);
+        visited[index] = true;
         queue.add(source);
         while(!queue.isEmpty()) {
             int v = queue.pop();
@@ -126,6 +176,7 @@ public class AdjacencyMatrixDirectedGraph implements IGraph {
             for(int i = 0; i < edges[v].length; i++) {
                 if(edges[v][i] == 1 && !visited[i]){
                     System.out.println("(" + v + "," + i +")");
+                    visited[i] = true;
                     queue.add(i);
                 }
             }

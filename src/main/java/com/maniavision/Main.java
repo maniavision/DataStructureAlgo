@@ -2,6 +2,7 @@ package com.maniavision;
 
 import com.maniavision.adts.IGraph;
 import com.maniavision.impl.AdjacencyListGraph;
+import com.maniavision.impl.AdjacencyMatrixGraph;
 import com.maniavision.problems.ListProblems;
 import com.maniavision.problems.StringProblems;
 
@@ -12,7 +13,7 @@ import java.util.List;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
-        IGraph g = new AdjacencyListGraph(false);
+        IGraph g = new AdjacencyMatrixGraph(false);
         g.addVertex(0);
         g.addVertex(1);
         g.addVertex(2);
@@ -26,8 +27,8 @@ public class Main {
         g.addEdge(2, 4, 1);
         g.addEdge(3, 4, 1);
 
-//        g.depthFirstSearch(0, 2);
-        g.breathFirstSearch(0, 3);
+        g.depthFirstSearch(0, 2);
+//        g.breathFirstSearch(0, 3);
 
     }
 
