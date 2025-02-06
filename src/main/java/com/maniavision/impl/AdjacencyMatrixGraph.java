@@ -101,7 +101,8 @@ public class AdjacencyMatrixGraph implements IGraph {
     @Override
     public void depthFirstSearch(int source) {
         boolean visited[] = new boolean[numbVertices];
-        dfsUtil(source, visited);
+        int index = indexOf(source);
+        dfsUtil(index, visited);
     }
 
     @Override
@@ -120,12 +121,11 @@ public class AdjacencyMatrixGraph implements IGraph {
         visited[index] = true;
         queue.add(index);
         while(!queue.isEmpty()) {
-            int v = queue.pop();
-
-            for(int i = 0; i < edges[v].length; i++) {
-                if(edges[v][i] == 1 && !visited[i]){
-                    System.out.println("(" + v + "," + i +")");
+            index = queue.poll();
+            for(int i = 0; i < edges[index].length; i++) {
+                if(edges[index][i] == 1 && !visited[i]){
                     visited[i] = true;
+                    System.out.println("(" + vertices[index] + "," + vertices[i] +")");
                     queue.add(i);
                 }
             }
@@ -136,7 +136,7 @@ public class AdjacencyMatrixGraph implements IGraph {
         visited[index] = true;
         for(int i = 0; i < edges[index].length; i++) {
             if(edges[index][i] == 1 && !visited[i]) {
-                System.out.println("(" + index + "," + i + ")");
+                System.out.println("(" + vertices[index] + "," + vertices[i] + ")");
                 dfsUtil(i, visited);
             }
         }
@@ -146,19 +146,20 @@ public class AdjacencyMatrixGraph implements IGraph {
         boolean visited[] = new boolean[numbVertices];
         Stack<Integer> stk = new Stack<>();
         int index = indexOf(source);
+        visited[index] = true;
         stk.push(index);
 
         while(!stk.empty()) {
-            int v = stk.pop();
-            visited[v] = true;
-            for(int i = 0; i < edges[v].length; i++) {
-                if(edges[v][i] == 1 && !visited[i]){
-                    System.out.println("(" + v + "," + i +")");
+            index = stk.pop();
+            for(int i = 0; i < edges[index].length; i++) {
+                if(edges[index][i] == 1 && !visited[i]){
+                    System.out.println("(" + vertices[index] + "," + vertices[i] +")");
+                    visited[i] = true;
                     stk.push(i);
                 }
             }
         }
-        return visited[target];
+        return visited[indexOf(target)];
     }
 
 
@@ -168,19 +169,31 @@ public class AdjacencyMatrixGraph implements IGraph {
         ArrayDeque<Integer> queue = new ArrayDeque<>();
         int index = indexOf(source);
         visited[index] = true;
-        queue.add(source);
+        queue.add(index);
         while(!queue.isEmpty()) {
-            int v = queue.pop();
-            visited[v] = true;
-
-            for(int i = 0; i < edges[v].length; i++) {
-                if(edges[v][i] == 1 && !visited[i]){
-                    System.out.println("(" + v + "," + i +")");
+            index = queue.pop();
+            for(int i = 0; i < edges[index].length; i++) {
+                if(edges[index][i] == 1 && !visited[i]){
+                    System.out.println("(" + vertices[index] + "," + vertices[i] +")");
                     visited[i] = true;
                     queue.add(i);
                 }
             }
         }
-        return visited[target];
+        return visited[indexOf(target)];
+    }
+
+    @Override
+    public int connectedComponents() {
+        int count = 0;
+        boolean visited[] = new boolean[vertices.length];
+        for(Integer v: vertices) {
+            int index = indexOf(v);
+            if(!visited[index]) {
+                dfsUtil(index, visited);
+                count++;
+            }
+        }
+        return count;
     }
 }

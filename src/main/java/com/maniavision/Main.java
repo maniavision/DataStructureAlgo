@@ -13,7 +13,7 @@ import java.util.List;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
-        IGraph g = new AdjacencyMatrixGraph(false);
+        IGraph g = new AdjacencyListGraph(false);
         g.addVertex(0);
         g.addVertex(1);
         g.addVertex(2);
@@ -27,8 +27,11 @@ public class Main {
         g.addEdge(2, 4, 1);
         g.addEdge(3, 4, 1);
 
-        g.depthFirstSearch(0, 2);
-//        g.breathFirstSearch(0, 3);
+        g.depthFirstSearch(0);
+        System.out.println();
+        g.breathFirstSearch(0);
+        System.out.println();
+        System.out.println(g.connectedComponents());
 
     }
 

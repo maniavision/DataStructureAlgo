@@ -12,4 +12,5 @@ public interface IGraph {
     boolean depthFirstSearch(int source, int target);
     void breathFirstSearch(int source);
     boolean breathFirstSearch(int source, int target);
+    int connectedComponents();
 }

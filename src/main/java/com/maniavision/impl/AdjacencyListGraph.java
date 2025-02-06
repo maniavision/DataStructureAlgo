@@ -69,22 +69,24 @@ public class AdjacencyListGraph implements IGraph {
     }
 
     private boolean dfsUtilV2(int v, int target, boolean visited[]) {
-        visited[v] = true;
         int index = vertices.indexOf(v);
+        visited[index] = true;
         for(Integer adjacentVertex: edges.get(index)) {
+            int adjIndex = vertices.indexOf(adjacentVertex);
             if(adjacentVertex == target)
                 return true;
-            else if(!visited[adjacentVertex])
+            else if(!visited[adjIndex])
                 return dfsUtilV2(adjacentVertex, target, visited);
         }
         return false;
     }
 
     private void dfsUtilV1(int v, boolean visited[]) {
-        visited[v] = true;
         int index = vertices.indexOf(v);
+        visited[index] = true;
         for(Integer adjacentVertex: edges.get(index)) {
-            if(!visited[adjacentVertex]) {
+            int adjIndex = vertices.indexOf(adjacentVertex);
+            if(!visited[adjIndex]) {
                 System.out.println("(" + v + ", " + adjacentVertex + ")");
                 dfsUtilV1(adjacentVertex, visited);
             }
@@ -95,16 +97,17 @@ public class AdjacencyListGraph implements IGraph {
     public void breathFirstSearch(int source) {
         boolean visited[] = new boolean[vertices.size()];
         ArrayDeque<Integer> q = new ArrayDeque<>();
-        visited[source] = true;
-        q.add(source);
+        int index = vertices.indexOf(source);
+        visited[index] = true;
+        q.add(index);
         while(!q.isEmpty()) {
-            source = q.poll();
-
-            for(Integer adjacencyVertex: edges.get(vertices.indexOf(source))) {
-                if(!visited[adjacencyVertex]) {
-                    System.out.println("(" + source + ", " + adjacencyVertex + ")");
-                    visited[adjacencyVertex] = true;
-                    q.add(adjacencyVertex);
+            index = q.poll();
+            for(Integer adjacentVertex: edges.get(index)) {
+                int adjIndex = vertices.indexOf(adjacentVertex);
+                if(!visited[adjIndex]) {
+                    System.out.println("(" + vertices.get(index) + ", " + adjacentVertex + ")");
+                    visited[adjIndex] = true;
+                    q.add(adjIndex);
                 }
             }
         }
@@ -114,20 +117,36 @@ public class AdjacencyListGraph implements IGraph {
     public boolean breathFirstSearch(int source, int target) {
         boolean visited[] = new boolean[vertices.size()];
         ArrayDeque<Integer> q = new ArrayDeque<>();
-        visited[source] = true;
-        q.add(source);
+        int index = vertices.indexOf(source);
+        visited[index] = true;
+        q.add(index);
         while(!q.isEmpty()) {
-            source = q.poll();
-
-            for(Integer adjacencyVertex: edges.get(vertices.indexOf(source))) {
+            index = q.poll();
+            for(Integer adjacencyVertex: edges.get(index)) {
+                int adjIndex = vertices.indexOf(adjacencyVertex);
                 if(adjacencyVertex == target)
                     return true;
-                if(!visited[adjacencyVertex]) {
-                    visited[adjacencyVertex] = true;
-                    q.add(adjacencyVertex);
+                if(!visited[adjIndex]) {
+                    visited[adjIndex] = true;
+                    q.add(adjIndex);
                 }
             }
         }
         return false;
+    }
+
+    @Override
+    public int connectedComponents() {
+        int count = 0;
+        boolean visited[] = new boolean[vertices.size()];
+
+        for(Integer v: vertices) {
+            int index = vertices.indexOf(v);
+            if(!visited[index]) {
+                dfsUtilV1(v, visited);
+                count++;
+            }
+        }
+        return count;
     }
 }
