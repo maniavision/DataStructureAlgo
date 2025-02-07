@@ -13,4 +13,5 @@ public interface IGraph {
     void breathFirstSearch(int source);
     boolean breathFirstSearch(int source, int target);
     int connectedComponents();
+    void topologicalSort();
 }

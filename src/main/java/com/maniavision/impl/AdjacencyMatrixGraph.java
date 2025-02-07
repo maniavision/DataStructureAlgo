@@ -14,6 +14,7 @@ public class AdjacencyMatrixGraph implements IGraph {
     private int vertices[];
     private int edges[][];
     private boolean isDirected;
+    private boolean hasCycle;
 
     public AdjacencyMatrixGraph(boolean isDirected) {
         this.isDirected = isDirected;
@@ -102,24 +103,46 @@ public class AdjacencyMatrixGraph implements IGraph {
     public void depthFirstSearch(int source) {
         boolean visited[] = new boolean[numbVertices];
         int index = indexOf(source);
-        dfsUtil(index, visited);
+        dfsUtil(index, visited, null);
     }
 
     @Override
     public boolean depthFirstSearch(int source, int target) {
         boolean visited[] = new boolean[numbVertices];
         int index = indexOf(source);
-        dfsUtil(index, visited);
+        dfsUtil(index, visited, null);
         return visited[target];
+    }
+
+    private void dfsUtil(int index, boolean[] visited, Stack<Integer> stack) {
+        visited[index] = true;
+        for(int i = 0; i < edges[index].length; i++) {
+            if(edges[index][i] == 1 && !visited[i]) {
+                System.out.println("(" + vertices[index] + "," + vertices[i] + ")");
+                dfsUtil(i, visited, stack);
+            }
+        }
     }
 
     @Override
     public void breathFirstSearch(int source) {
         boolean visited[] = new boolean[numbVertices];
+        breathFirstSearch(source, null);
+    }
+
+    @Override
+    public boolean breathFirstSearch(int source, int target) {
+        boolean visited[] = new boolean[numbVertices];
+        breathFirstSearch(source, visited);
+        return visited[indexOf(target)];
+    }
+
+    private void breathFirstSearch(int source, boolean visited[]) {
+        visited = new boolean[numbVertices];
         ArrayDeque<Integer> queue = new ArrayDeque<>();
         int index = indexOf(source);
         visited[index] = true;
-        queue.add(index);
+        queue.offer(index);
         while(!queue.isEmpty()) {
             index = queue.poll();
             for(int i = 0; i < edges[index].length; i++) {
@@ -131,58 +154,6 @@ public class AdjacencyMatrixGraph implements IGraph {
             }
         }
     }
-
-    private void dfsUtil(int index, boolean[] visited) {
-        visited[index] = true;
-        for(int i = 0; i < edges[index].length; i++) {
-            if(edges[index][i] == 1 && !visited[i]) {
-                System.out.println("(" + vertices[index] + "," + vertices[i] + ")");
-                dfsUtil(i, visited);
-            }
-        }
-    }
-
-    public boolean depthFirstSearchV1(int source, int target) {
-        boolean visited[] = new boolean[numbVertices];
-        Stack<Integer> stk = new Stack<>();
-        int index = indexOf(source);
-        visited[index] = true;
-        stk.push(index);
-
-        while(!stk.empty()) {
-            index = stk.pop();
-            for(int i = 0; i < edges[index].length; i++) {
-                if(edges[index][i] == 1 && !visited[i]){
-                    System.out.println("(" + vertices[index] + "," + vertices[i] +")");
-                    visited[i] = true;
-                    stk.push(i);
-                }
-            }
-        }
-        return visited[indexOf(target)];
-    }
-
-
-    @Override
-    public boolean breathFirstSearch(int source, int target) {
-        boolean visited[] = new boolean[numbVertices];
-        ArrayDeque<Integer> queue = new ArrayDeque<>();
-        int index = indexOf(source);
-        visited[index] = true;
-        queue.add(index);
-        while(!queue.isEmpty()) {
-            index = queue.pop();
-            for(int i = 0; i < edges[index].length; i++) {
-                if(edges[index][i] == 1 && !visited[i]){
-                    System.out.println("(" + vertices[index] + "," + vertices[i] +")");
-                    visited[i] = true;
-                    queue.add(i);
-                }
-            }
-        }
-        return visited[indexOf(target)];
-    }
-
     @Override
     public int connectedComponents() {
         int count = 0;
@@ -190,10 +161,30 @@ public class AdjacencyMatrixGraph implements IGraph {
         for(Integer v: vertices) {
             int index = indexOf(v);
             if(!visited[index]) {
-                dfsUtil(index, visited);
+                dfsUtil(index, visited, null);
                 count++;
             }
         }
         return count;
+    }
+
+    @Override
+    public void topologicalSort() {
+        boolean visited[] = new boolean[vertices.length];
+        Stack<Integer> stk = new Stack<>();
+        if(isDirected && !hasCycle) {
+            for(Integer v: vertices) {
+                int index = indexOf(v);
+                if(!visited[index]) {
+                    dfsUtil(index, visited, stk);
+                }
+            }
+        }
+        while(!stk.isEmpty()) {
+            int vertex = stk.pop();
+            String arrow = (stk.isEmpty()) ? "" : " -> ";
+            System.out.print(vertex + arrow);
+        }
+        System.out.println();
     }
 }

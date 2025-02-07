@@ -5,13 +5,14 @@ import com.maniavision.adts.IGraph;
 import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class AdjacencyListGraph implements IGraph {
 
     private List<Integer> vertices;
     private List<List<Integer>> edges;
     private boolean isDirected;
-
+    private boolean hasCycle;
     public AdjacencyListGraph(boolean isDirected) {
         this.isDirected = isDirected;
         this.vertices = new LinkedList<>();
@@ -59,43 +60,39 @@ public class AdjacencyListGraph implements IGraph {
     @Override
     public void depthFirstSearch(int source) {
         boolean visited[] = new boolean[vertices.size()];
-        dfsUtilV1(source, visited);
+        int index = vertices.indexOf(source);
+        dfsUtil(index, visited, null);
+    }
+
+    private void dfsUtil(int index, boolean visited[], Stack<Integer> stack) {
+        visited[index] = true;
+        for(Integer adjacentVertex: edges.get(index)) {
+            int adjIndex = vertices.indexOf(adjacentVertex);
+            if(!visited[adjIndex]) {
+                System.out.println("(" + vertices.get(index) + ", " + adjacentVertex + ")");
+                dfsUtil(adjacentVertex, visited, stack);
+            }
+        }
+        stack.push(vertices.get(index));
     }
 
     @Override
     public boolean depthFirstSearch(int source, int target) {
         boolean visited[] = new boolean[vertices.size()];
-        return dfsUtilV2(source, target, visited);
-    }
-
-    private boolean dfsUtilV2(int v, int target, boolean visited[]) {
-        int index = vertices.indexOf(v);
-        visited[index] = true;
-        for(Integer adjacentVertex: edges.get(index)) {
-            int adjIndex = vertices.indexOf(adjacentVertex);
-            if(adjacentVertex == target)
-                return true;
-            else if(!visited[adjIndex])
-                return dfsUtilV2(adjacentVertex, target, visited);
-        }
-        return false;
-    }
-
-    private void dfsUtilV1(int v, boolean visited[]) {
-        int index = vertices.indexOf(v);
-        visited[index] = true;
-        for(Integer adjacentVertex: edges.get(index)) {
-            int adjIndex = vertices.indexOf(adjacentVertex);
-            if(!visited[adjIndex]) {
-                System.out.println("(" + v + ", " + adjacentVertex + ")");
-                dfsUtilV1(adjacentVertex, visited);
-            }
-        }
+        int srcIndex = vertices.indexOf(source);
+        int trgIndex = vertices.indexOf(target);
+        dfsUtil(srcIndex, visited, null);
+        return visited[trgIndex];
     }
 
     @Override
     public void breathFirstSearch(int source) {
         boolean visited[] = new boolean[vertices.size()];
+        breathFirstSearch(source, visited);
+    }
+
+    private void breathFirstSearch(int source, boolean visited[]) {
+        visited = new boolean[vertices.size()];
         ArrayDeque<Integer> q = new ArrayDeque<>();
         int index = vertices.indexOf(source);
         visited[index] = true;
@@ -116,37 +113,40 @@ public class AdjacencyListGraph implements IGraph {
     @Override
     public boolean breathFirstSearch(int source, int target) {
         boolean visited[] = new boolean[vertices.size()];
-        ArrayDeque<Integer> q = new ArrayDeque<>();
-        int index = vertices.indexOf(source);
-        visited[index] = true;
-        q.add(index);
-        while(!q.isEmpty()) {
-            index = q.poll();
-            for(Integer adjacencyVertex: edges.get(index)) {
-                int adjIndex = vertices.indexOf(adjacencyVertex);
-                if(adjacencyVertex == target)
-                    return true;
-                if(!visited[adjIndex]) {
-                    visited[adjIndex] = true;
-                    q.add(adjIndex);
-                }
-            }
-        }
-        return false;
+        breathFirstSearch(source, visited);
+        int trgIndex = vertices.indexOf(target);
+        return visited[trgIndex];
     }
 
     @Override
     public int connectedComponents() {
         int count = 0;
         boolean visited[] = new boolean[vertices.size()];
-
-        for(Integer v: vertices) {
-            int index = vertices.indexOf(v);
-            if(!visited[index]) {
-                dfsUtilV1(v, visited);
+        for(int i = 0; i < vertices.size(); i++) {
+            if(!visited[i]) {
+                dfsUtil(i, visited, null);
                 count++;
             }
         }
         return count;
+    }
+
+    @Override
+    public void topologicalSort() {
+        if(isDirected /*&& !hasCycle*/) {
+            boolean visited[] = new boolean[vertices.size()];
+            Stack<Integer> stk = new Stack<>();
+            for(int i = 0; i < vertices.size(); i++) {
+                if(!visited[i])
+                    dfsUtil(i, visited, stk);
+            }
+
+            while(!stk.isEmpty()) {
+                int vertex = stk.pop();
+                String arrow = (stk.isEmpty()) ? "" : " -> ";
+                System.out.print(vertex + arrow);
+            }
+            System.out.println();
+        }
     }
 }
