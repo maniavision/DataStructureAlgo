@@ -170,4 +170,10 @@ public class BinarySearchTreeIterative implements IBinarySearchTree {
             }
         }
     }
+
+    public boolean isValidBST() {
+        boolean isValidBST = false;
+
+        return isValidBST;
+    }
 }

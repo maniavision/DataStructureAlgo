@@ -11,6 +11,31 @@ public class StringProblems {
             "alphabets to large case characters";
     public static String PALINDROME_CHECK = "Find if the string is a palindrome or not";
 
+
+    public static int patternMatchingCount(String text, String pattern) {
+        int result = 0;
+        int index1 = 0;
+        int index2 = 0;
+
+        while(index1 < text.length()) {
+            while(index2 < pattern.length()
+                    && text.charAt(index1) == pattern.charAt(index2)){
+                index1++;
+                index2++;
+            }
+
+            if(index2 == pattern.length()) {
+                result++;
+                index2 = 0;
+            } else {
+                index1++;
+            }
+        }
+        return result;
+    }
+
+
+
     public static boolean palindromeCheck(String input) {
         boolean result = true;
         int start = 0;

@@ -14,4 +14,5 @@ public interface IGraph {
     boolean breathFirstSearch(int source, int target);
     int connectedComponents();
     void topologicalSort();
+    boolean hasCycle();
 }

@@ -116,10 +116,10 @@ public class AdjacencyMatrixGraph implements IGraph {
 
     private void dfsUtil(int index, boolean[] visited, Stack<Integer> stack) {
         visited[index] = true;
-        for(int i = 0; i < edges[index].length; i++) {
-            if(edges[index][i] == 1 && !visited[i]) {
-                System.out.println("(" + vertices[index] + "," + vertices[i] + ")");
-                dfsUtil(i, visited, stack);
+        for(int neighborIndex = 0; neighborIndex < edges[index].length; neighborIndex++) {
+            if(edges[index][neighborIndex] == 1 && !visited[neighborIndex]) {
+                System.out.println("(" + vertices[index] + "," + vertices[neighborIndex] + ")");
+                dfsUtil(neighborIndex, visited, stack);
             }
         }
     }
@@ -186,5 +186,65 @@ public class AdjacencyMatrixGraph implements IGraph {
             System.out.print(vertex + arrow);
         }
         System.out.println();
+    }
+
+    @Override
+    public boolean hasCycle() {
+        if(isDirected)
+            return hasCycleDirected();
+        else
+            return hasCycleUndirected();
+    }
+    private boolean hasCycleDirected() {
+        boolean visited[] = new boolean[vertices.length];
+        boolean recStack[] = new boolean[vertices.length];
+
+        for(int index = 0; index < vertices.length; index++) {
+            if(!visited[index] && dfsHasCycle(index, visited, recStack))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean dfsHasCycle(int index, boolean visited[], boolean recStack[]) {
+        visited[index] = true;
+        recStack[index] = true;
+        for(int neighborIndex = 0; neighborIndex < edges[index].length; neighborIndex++) {
+            if(edges[index][neighborIndex] == 1)
+                if(!visited[neighborIndex]) {
+                    if (dfsHasCycle(neighborIndex, visited, recStack)) {
+                        return true;
+                    }
+                } else if(recStack[neighborIndex]) {
+                    return true;
+                }
+        }
+        recStack[index] = false;
+        return false;
+    }
+
+    private boolean hasCycleUndirected() {
+        boolean visited[] = new boolean[vertices.length];
+
+        for(int index = 0; index < vertices.length; index++) {
+            if(!visited[index] && dfsHasCycle(index, -1, visited))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean dfsHasCycle(int index, int parentIndex, boolean visited[]) {
+        visited[index] = true;
+        for(int neighborIndex = 0; neighborIndex < edges[index].length; neighborIndex++) {
+            if(edges[index][neighborIndex] == 1)
+                if(!visited[neighborIndex]) {
+                    if(dfsHasCycle(neighborIndex, index, visited)) {
+                        return true;
+                    }
+                } else if(parentIndex != neighborIndex) {
+                    return true;
+                }
+        }
+        return false;
     }
 }

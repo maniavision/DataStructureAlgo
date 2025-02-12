@@ -73,7 +73,8 @@ public class AdjacencyListGraph implements IGraph {
                 dfsUtil(adjacentVertex, visited, stack);
             }
         }
-        stack.push(vertices.get(index));
+        if(stack != null)
+            stack.push(vertices.get(index));
     }
 
     @Override
@@ -148,5 +149,70 @@ public class AdjacencyListGraph implements IGraph {
             }
             System.out.println();
         }
+    }
+
+    @Override
+    public boolean hasCycle() {
+        if(isDirected)
+            return hasCycleDirected();
+        else
+            return hasCycleUndirected();
+    }
+
+    private boolean hasCycleUndirected() {
+        boolean visited[] = new boolean[vertices.size()];
+
+        for(int i = 0; i < vertices.size(); i++) {
+            if(!visited[i] && dfsHasCycle(i, -1, visited))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean hasCycleDirected() {
+        boolean visited[] = new boolean[vertices.size()];
+        boolean recStack[] = new boolean[vertices.size()];
+
+        for(int index = 0; index < vertices.size(); index++) {
+            if(!visited[index] && dfsHasCycle(index, visited, recStack))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean dfsHasCycle(int index, boolean visited[], boolean recStack[]) {
+        visited[index] = true;
+        recStack[index] = true;
+        List<Integer> neighbors = edges.get(index);
+
+        for(Integer neighbor: neighbors) {
+            int neighborIndex = vertices.indexOf(neighbor);
+            if(!visited[neighborIndex]) {
+                if(dfsHasCycle(neighborIndex, visited, recStack)) {
+                    return true;
+                }
+            } else if(recStack[neighborIndex]) {
+                return true;
+            }
+        }
+        recStack[index] = false;
+        return false;
+    }
+
+
+    private boolean dfsHasCycle(int index, int parentIndex, boolean visited[]) {
+        visited[index] = true;
+        List<Integer> adjacentVertices = edges.get(index);
+        for(Integer adjacentVertex: adjacentVertices) {
+            int adjIndex = vertices.indexOf(adjacentVertex);
+            if(!visited[adjacentVertex]) {
+                if(dfsHasCycle(adjIndex, index, visited)) {
+                    return true;
+                }
+            } else if(adjIndex != parentIndex) {
+                return true;
+            }
+        }
+        return false;
     }
 }
