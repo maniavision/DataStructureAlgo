@@ -4,6 +4,7 @@ import com.maniavision.adts.IGraph;
 import com.maniavision.adts.ITrie;
 import com.maniavision.impl.AdjacencyListGraph;
 import com.maniavision.impl.AdjacencyMatrixGraph;
+import com.maniavision.impl.GraphMatrix;
 import com.maniavision.impl.Trie;
 import com.maniavision.problems.ListProblems;
 import com.maniavision.problems.StringProblems;
@@ -16,34 +17,38 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-        IGraph g = new AdjacencyListGraph(true);
-        IGraph gg = new AdjacencyListGraph(true);
-        gg.addVertex(0);
-        gg.addVertex(1);
-        gg.addVertex(2);
-        gg.addVertex(3);
+        GraphMatrix<String> graph = new GraphMatrix<>(10, false);
 
-        g.addVertex(0);
-        g.addVertex(1);
-        g.addVertex(2);
-        g.addVertex(3);
+        graph.addVertex("London");
+        graph.addVertex("Paris");
+        graph.addVertex("Tokyo");
+        graph.addVertex("NewYork");
+        graph.addVertex("Toronto");
+        graph.addVertex("San Francisco");
+        graph.addVertex("Houston");
+        graph.addVertex("Miami");
+        graph.addVertex("Dakar");
+        graph.addVertex("Lagos");
 
-        g.addEdge(0, 1, 1);
-        g.addEdge(0, 2, 1);
-        g.addEdge(1, 2, 1);
-        g.addEdge(2, 3, 1);
-        g.addEdge(2, 0, 1);
-        g.addEdge(3, 3, 1);
+        graph.addEdge("London", "Tokyo");
+        graph.addEdge("London", "Lagos");
+        graph.addEdge("London", "NewYork");
+        graph.addEdge("London", "Paris");
+        graph.addEdge("Paris", "Dakar");
+        graph.addEdge("Paris", "Toronto");
+        graph.addEdge("Paris", "Miami");
+        graph.addEdge("NewYork", "San Francisco");
+        graph.addEdge("NewYork", "Toronto");
+        graph.addEdge("NewYork", "Houston");
+        graph.addEdge("NewYork", "Dakar");
+        graph.addEdge("Houston", "Miami");
+        graph.addEdge("Houston", "Lagos");
+        graph.addEdge("Houston", "San Francisco");
 
-        gg.addEdge(0, 1, 1);
-        gg.addEdge(0, 2, 1);
-        gg.addEdge(1, 2, 1);
-        gg.addEdge(2, 3, 1);
+//        graph.print();
+        graph.bfs();
 
-//        g.depthFirstSearch(0);
-//        g.breathFirstSearch(0);
-        System.out.println(g.hasCycle());
-        System.out.println(gg.hasCycle());
+
 
     }
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class AdjacencyMatrixGraph implements IGraph {
+public class AdjacencyMatrixGraph {
     private static int DEFAULT_CAPACITY = 10;
     private int numbVertices;
     private int maxVertices;
@@ -31,7 +31,6 @@ public class AdjacencyMatrixGraph implements IGraph {
         this.edges = new int[maxVertices][maxVertices];
     }
 
-    @Override
     public void addVertex(int vertex) {
         vertices[numbVertices] = vertex;
 
@@ -42,7 +41,6 @@ public class AdjacencyMatrixGraph implements IGraph {
         numbVertices++;
     }
 
-    @Override
     public boolean hasVertex(int vertex) {
         boolean found = false;
         int index = 0;
@@ -66,7 +64,6 @@ public class AdjacencyMatrixGraph implements IGraph {
         return -1;
     }
 
-    @Override
     public void addEdge(int fromVertex, int toVertex, int cost) {
         int row = indexOf(fromVertex);
         int col = indexOf(toVertex);
@@ -75,7 +72,6 @@ public class AdjacencyMatrixGraph implements IGraph {
             edges[col][row] = cost;
     }
 
-    @Override
     public List<Integer> getVertices(int vertex) {
         List<Integer> adjacentIndexes = new ArrayList<>();
         int index = indexOf(vertex);
@@ -94,19 +90,16 @@ public class AdjacencyMatrixGraph implements IGraph {
         return result;
     }
 
-    @Override
     public boolean isEmpty() {
         return vertices.length == 0;
     }
 
-    @Override
     public void depthFirstSearch(int source) {
         boolean visited[] = new boolean[numbVertices];
         int index = indexOf(source);
         dfsUtil(index, visited, null);
     }
 
-    @Override
     public boolean depthFirstSearch(int source, int target) {
         boolean visited[] = new boolean[numbVertices];
         int index = indexOf(source);
@@ -124,13 +117,11 @@ public class AdjacencyMatrixGraph implements IGraph {
         }
     }
 
-    @Override
     public void breathFirstSearch(int source) {
         boolean visited[] = new boolean[numbVertices];
         breathFirstSearch(source, null);
     }
 
-    @Override
     public boolean breathFirstSearch(int source, int target) {
         boolean visited[] = new boolean[numbVertices];
         breathFirstSearch(source, visited);
@@ -154,7 +145,6 @@ public class AdjacencyMatrixGraph implements IGraph {
             }
         }
     }
-    @Override
     public int connectedComponents() {
         int count = 0;
         boolean visited[] = new boolean[vertices.length];
@@ -168,7 +158,6 @@ public class AdjacencyMatrixGraph implements IGraph {
         return count;
     }
 
-    @Override
     public void topologicalSort() {
         boolean visited[] = new boolean[vertices.length];
         Stack<Integer> stk = new Stack<>();
@@ -188,13 +177,17 @@ public class AdjacencyMatrixGraph implements IGraph {
         System.out.println();
     }
 
-    @Override
     public boolean hasCycle() {
         if(isDirected)
             return hasCycleDirected();
         else
             return hasCycleUndirected();
     }
+
+    public void shortestPath(int start, int end) {
+
+    }
+
     private boolean hasCycleDirected() {
         boolean visited[] = new boolean[vertices.length];
         boolean recStack[] = new boolean[vertices.length];
