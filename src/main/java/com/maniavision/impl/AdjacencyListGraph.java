@@ -59,9 +59,9 @@ public class AdjacencyListGraph  {
 
     private void dfsUtil(Vertex vertex, Stack<Vertex> stack) {
         int vertexIndex = vertices.indexOf(vertex);
-        vertex.status = VertexStatus.DISCOVERED;
+        vertex.status = VertexStatus.VISITED;
         for(Vertex adjacentVertex: edges.get(vertexIndex)) {
-            if(adjacentVertex.status == VertexStatus.UNDISCOVERED) {
+            if(adjacentVertex.status == VertexStatus.UNVISITED) {
                 System.out.println("(" + vertex.value + ", " + adjacentVertex.value + ")");
                 dfsUtil(adjacentVertex, stack);
             }

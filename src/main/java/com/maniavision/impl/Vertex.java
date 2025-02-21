@@ -6,5 +6,5 @@ public class Vertex <T>{
     public T value;
     public int parent;
     public int time;
-    public VertexStatus status = VertexStatus.UNDISCOVERED;
+    public VertexStatus status = VertexStatus.UNVISITED;
 }

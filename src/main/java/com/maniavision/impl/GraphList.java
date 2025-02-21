@@ -1,10 +1,12 @@
 package com.maniavision.impl;
 
+import com.maniavision.adts.IGraph;
+
 import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GraphList<T> {
+public class GraphList<T> implements IGraph<T> {
 
     private List<T> vertices;
     private List<List<Integer>> edges;
@@ -21,6 +23,7 @@ public class GraphList<T> {
         this.isDirected = isDirected;
     }
 
+    @Override
     public void addVertex(T value) {
         if(!vertices.contains(value)) {
             vertices.add(value);
@@ -28,10 +31,20 @@ public class GraphList<T> {
         }
     }
 
-    public void addEdge(T source, T dest) {
-        if(vertices.contains(source) && vertices.contains(dest)) {
-            int srcIndex = vertices.indexOf(source);
-            int dstIndex = vertices.indexOf(dest);
+    @Override
+    public boolean hasVertex(T vertex) {
+        return vertices.contains(vertex);
+    }
+
+    @Override
+    public void addEdge(T fromVertex, T toVertex, int weight) {
+
+    }
+
+    public void addEdge(T from, T to) {
+        if(vertices.contains(from) && vertices.contains(to)) {
+            int srcIndex = vertices.indexOf(from);
+            int dstIndex = vertices.indexOf(to);
             edges.get(srcIndex).add(dstIndex);
             if(!isDirected) {
                 edges.get(dstIndex).add(srcIndex);
@@ -39,10 +52,11 @@ public class GraphList<T> {
         }
     }
 
-    public void removeVertex(T value) {
-        int index = vertices.indexOf(value);
+    @Override
+    public void removeVertex(T key) {
+        int index = vertices.indexOf(key);
         edges.remove(index);
-        vertices.remove(value);
+        vertices.remove(key);
 
         for(List<Integer> neighbors : edges) {
             if(neighbors.contains(index)) {
@@ -62,27 +76,40 @@ public class GraphList<T> {
         }
     }
 
-    private void initArrays() {
-        if(visited == null || parents == null) {
-            visited = new boolean[vertices.size()];
-            parents = new int[vertices.size()];
-            articulationPoints = new boolean[vertices.size()];
-            discoveryTime = new int[vertices.size()];
-            minimumTime = new int[vertices.size()];
+    @Override
+    public List<T> getNeighbors(T vertex) {
+        List<T> neighbors = new LinkedList<>();
+        if(hasVertex(vertex)) {
+            int index = vertices.indexOf(vertex);
+            for(Integer neighborIndex: edges.get(index)) {
+                neighbors.add(vertices.get(neighborIndex));
+            }
         }
+        return neighbors;
     }
 
-    private void resetArrays() {
-        for(int i = 0; i < visited.length; i++) {
-            visited[i] = false;
-            parents[i] = 0;
-            articulationPoints[i] = false;
-            discoveryTime[i] = 0;
-            minimumTime[i] = 0;
-        }
+    @Override
+    public boolean isEmpty() {
+        return vertices.isEmpty();
     }
 
-    public void dfs() {
+    @Override
+    public int degreeCount(T vertex) {
+        return 0;
+    }
+
+    @Override
+    public int inDegreeCount(T vertex) {
+        return 0;
+    }
+
+    @Override
+    public int outDegreeCount(T vertex) {
+        return 0;
+    }
+
+    @Override
+    public void depthFirstSearch() {
         initArrays();
         resetArrays();
         time = 0;
@@ -91,7 +118,16 @@ public class GraphList<T> {
                 dfs(index, -1);
             }
         }
-//        resetArrays();
+    }
+
+    @Override
+    public void depthFirstSearch(T sourceVertex) {
+
+    }
+
+    @Override
+    public boolean depthFirstSearch(T sourceVertex, T targetVertex) {
+        return false;
     }
 
     private void dfs(int vertexIndex, int parentIndex) {
@@ -119,13 +155,24 @@ public class GraphList<T> {
             articulationPoints[vertexIndex] = true;
     }
 
-    public void bfs() {
+    @Override
+    public void breathFirstSearch() {
         initArrays();
         for(int index = 0; index < vertices.size(); index++) {
             if(!visited[index]) {
                 bfs(index);
             }
         }
+    }
+
+    @Override
+    public void breathFirstSearch(T sourceVertex) {
+
+    }
+
+    @Override
+    public boolean breathFirstSearch(T sourceVertex, T targetVertex) {
+        return false;
     }
 
     private void bfs(int vertexIndex) {
@@ -148,6 +195,37 @@ public class GraphList<T> {
         }
     }
 
+    @Override
+    public void topologicalSort() {
+
+    }
+
+    @Override
+    public boolean hasCycle() {
+        return false;
+    }
+
+    private void initArrays() {
+        if(visited == null || parents == null) {
+            visited = new boolean[vertices.size()];
+            parents = new int[vertices.size()];
+            articulationPoints = new boolean[vertices.size()];
+            discoveryTime = new int[vertices.size()];
+            minimumTime = new int[vertices.size()];
+        }
+    }
+
+    private void resetArrays() {
+        for(int i = 0; i < visited.length; i++) {
+            visited[i] = false;
+            parents[i] = 0;
+            articulationPoints[i] = false;
+            discoveryTime[i] = 0;
+            minimumTime[i] = 0;
+        }
+    }
+
+    @Override
     public int componentsCount() {
         int counter = 0;
         for(int index = 0; index < vertices.size(); index++) {
@@ -176,7 +254,7 @@ public class GraphList<T> {
     }
 
     public void findArticulationPoints() {
-        dfs();
+        depthFirstSearch();
         for(int index = 0; index < articulationPoints.length; index++) {
             if(articulationPoints[index]) {
                 System.out.println(vertices.get(index) + " is an articulation point");

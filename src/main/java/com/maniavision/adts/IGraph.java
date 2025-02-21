@@ -4,18 +4,25 @@ import com.maniavision.impl.Vertex;
 
 import java.util.List;
 
-public interface IGraph {
-    void addVertex(Vertex vertex);
-    boolean hasVertex(Vertex vertex);
-    void addEdge(Vertex fromVertex, Vertex toVertex, int cost);
-    List<Vertex> getVertices(Vertex vertex);
+public interface IGraph <T>{
+    void addVertex(T newVertex);
+    void removeVertex(T key);
+    boolean hasVertex(T vertex);
+    void addEdge(T fromVertex, T toVertex, int weight);
+    void addEdge(T fromVertex, T toVertex);
+    List<T> getNeighbors(T vertex);
     boolean isEmpty();
-    void depthFirstSearch(Vertex source);
-    boolean depthFirstSearch(Vertex source, Vertex target);
-    void breathFirstSearch(Vertex source);
-    boolean breathFirstSearch(Vertex source, Vertex target);
-    int connectedComponents();
+    int degreeCount(T vertex);
+    int inDegreeCount(T vertex);
+    int outDegreeCount(T vertex);
+    void depthFirstSearch();
+    void depthFirstSearch(T sourceVertex);
+    boolean depthFirstSearch(T sourceVertex, T targetVertex);
+    void breathFirstSearch();
+    void breathFirstSearch(T sourceVertex);
+    boolean breathFirstSearch(T sourceVertex, T targetVertex);
+    int componentsCount();
     void topologicalSort();
     boolean hasCycle();
-    void shortestPath(Vertex start, Vertex end);
+    void shortestPath(T fromVertex, T toVertex);
 }
